@@ -44,7 +44,7 @@ module BakedFileSystem
       else
         _decompress_to_io(io)
       end
-      
+
       nil
     end
 
@@ -93,20 +93,20 @@ module BakedFileSystem
     @@files
   end
 
-  macro load(path, source = "")
+  macro load(path, root_path = __DIR__)
     extend BakedFileSystem
 
     @@files = [] of BakedFileSystem::BakedFile
 
-    source = {{ run("./loader", path, source).stringify }}
+    source = {{ run("./loader", path, root_path).stringify }}
     source.each_line do |line|
       parts = line.split("|")
 
       @@files << BakedFileSystem::BakedFile.new(
-        path:            parts[0], 
-        mime_type:       parts[1], 
-        size:            parts[2].to_i32, 
-        compressed_size: parts[3].to_i32, 
+        path:            parts[0],
+        mime_type:       parts[1],
+        size:            parts[2].to_i32,
+        compressed_size: parts[3].to_i32,
         encoded:         parts[4].strip
       )
     end
